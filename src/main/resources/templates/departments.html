@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta charset="UTF-8">
+
+    <title th:text="${departmentsWithCounts.getUnitName}">Title</title>
+</head>
+<body>
+<div class="pb-3 pl-4 bg-primary text-white text-center h1" th:text="${departmentsWithCounts.getUnitName}"> СП</div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="/units">Структурные подразделения <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container pt-3">
+    <div class="row">
+        <div class="col-lg-3 col-sm-6">
+            <div class="card text-white text-center bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${departmentsWithCounts.allCount}" > 10 </h5>
+                    <p class="card-text">Всего сотрудников</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card text-white text-center bg-info">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${departmentsWithCounts.plannedCount}" > 5 </h5>
+                    <p class="card-text">планируют вакцинацию</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card text-white text-center bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${departmentsWithCounts.startedCount}" > 7 </h5>
+                    <p class="card-text">начали вакцинацию</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card text-white text-center bg-success">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${departmentsWithCounts.finishedCount}" > 8 </h5>
+                    <p class="card-text">завершили вакцинацию</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <form class ="mb-3 " action="#" th:action="@{/departments}" method = "post">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-department">Добавить филиал/управление</span>
+                    </div>
+                    <input type="text" class="form-control" aria-describedby="inputGroup-division" name="departmentName" required>
+                    <input type="hidden" th:value="${departmentsWithCounts.getUnitId}" name="unitId"/>
+                    <input class ="btn btn-primary" type="submit" value="добавить"/>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div  class="alert alert-danger h4" th:if="${errorMsg != null}" th:text ="${errorMsg}"> сообщение с ошибкой </div>
+        </div>
+    </div>
+</div>
+<div th:if="${!departmentsWithCounts.departments.isEmpty()}">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th>всего сотрудников</th>
+            <th>планируют вакцинацию</th>
+            <th>начали вакцинацию</th>
+            <th>завершили вакцинацию</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tr th:each="dep : ${departmentsWithCounts.departments}">
+            <td>
+                <a th:href="@{|/department/${dep.id}|}" th:text="${dep.name}">  управление </a>
+            </td>
+            <td th:text="${dep.allCount}"> 0</td>
+            <td th:text="${dep.plannedCount}"> 0</td>
+            <td th:text="${dep.startedCount}"> 0 </td>
+            <td th:text="${dep.finishedCount}"> 0</td>
+            <td>
+                <button type="button" class="btn btn-danger" data-toggle="modal" th:data-target="${'#deleteDepartment' + dep.id}">
+                    удалить
+                </button>
+                <div class="modal body" th:id="${'deleteDepartment' + dep.id}" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" >Подтверждение удаления</h5>
+                            </div>
+                            <div class="modal-body" th:text="|Удалить ${dep.name}?|">
+                                Вы действительно хотите удалить?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
+                                <form action="#" th:action="${'/department/'+ dep.id + '/delete'}" method = "post">
+                                    <input type="hidden"  th:value="${departmentsWithCounts.unitId}" name="unitId"/>
+                                    <input type="submit" class="btn btn-danger" value="удалить"/>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>

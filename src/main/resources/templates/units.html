@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta charset="UTF-8">
+
+    <title>Структурные подразделения</title>
+</head>
+<body>
+<div class="pb-3 pl-4 bg-primary text-white text-center h1">Структурные Подразделения</div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 col-sm-6">
+            <div class="card text-white text-center bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${unitsWithCounts.allCount}" > 10 </h5>
+                    <p class="card-text">Всего сотрудников</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card text-white text-center bg-info">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${unitsWithCounts.plannedCount}" > 5 </h5>
+                    <p class="card-text">планируют вакцинацию</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card text-white text-center bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${unitsWithCounts.startedCount}" > 7 </h5>
+                    <p class="card-text">начали вакцинацию</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card text-white text-center bg-success">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${unitsWithCounts.finishedCount}" > 8 </h5>
+                    <p class="card-text">завершили вакцинацию</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <th:block th:each="unitWithCounts : ${unitsWithCounts.units}">
+            <div class ="col">
+                <div class="card text-center">
+                    <div class="card-header bg-primary text-white h4" th:text="${unitWithCounts.name}">Администрация</div>
+                    <div class="card-body">
+                        <div class="bg-primary text-white h6 pt-1 pb-2" th:text="|всего ${unitWithCounts.allCount} чел.|"> всего </div>
+                        <div class="bg-info text-white mt-1 h6 pt-1 pb-2" th:text="|планируют ${unitWithCounts.plannedCount} чел.|"> планируют </div>
+                        <div class="bg-warning text-white mt-1 h6 pt-1 pb-2" th:text="|начали ${unitWithCounts.startedCount} чел.|"> начали </div>
+                        <div class="bg-success text-white mt-1 h6 pt-1 pb-2" th:text="|закончили ${unitWithCounts.finishedCount} чел.|"> завершили </div>
+                        <a class="text-center mt-1 h5" th:href="@{|/unit/${unitWithCounts.id}|}"> список управлений </a>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

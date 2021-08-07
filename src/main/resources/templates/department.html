@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title th:text="${department.departmentName}">Title</title>
+</head>
+<body>
+<div class="pb-3 pl-4 bg-primary text-white text-center h1" th:text="${department.departmentName}"> управление</div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="/units">Структурные подразделения <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container pt-3">
+    <div class="row">
+        <div class="col-lg-3 col-sm-6">
+            <div class="card text-white text-center bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${department.allCount}" > 10 </h5>
+                    <p class="card-text">Всего сотрудников</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card text-white text-center bg-info">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${department.plannedCount}" > 5 </h5>
+                    <p class="card-text">планируют вакцинацию</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card text-white text-center bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${department.startedCount}" > 7 </h5>
+                    <p class="card-text">начали вакцинацию</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card text-white text-center bg-success">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${department.finishedCount}" > 8 </h5>
+                    <p class="card-text">завершили вакцинацию</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--строка с добавлением отдела -->
+    <div class="row mt-3">
+        <div class="col">
+            <form class ="mb-3 " action="#" th:action="${'/department/'+department.departmentId+'/add_division'}" method = "post">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-division">Добавить отдел</span>
+                    </div>
+                    <input type="text" class="form-control" aria-describedby="inputGroup-division" name="divisionName">
+                    <input class ="btn btn-primary" type="submit" value="добавить"/>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div  class="alert alert-danger h4" th:if="${errorMsg != null}" th:text ="${errorMsg}"> сообщение с ошибкой </div>
+        </div>
+    </div>
+
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class = "col">
+            <table class="table">
+            <th:block th:each="division : ${department.divisions}">
+                <tr class="table-active" >
+                    <td th:text="${division.name}"  colspan="6"> отдел</td>
+                    <!-- Добавление сотрудника в отдел -->
+                    <td>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" th:data-target="${'#addEmployeeToDivision'+division.divisionId}">
+                            Добавить сотрудника в отдел
+                        </button>
+                        <div class="modal" th:id="${'addEmployeeToDivision'+division.divisionId}" tabindex="-1"  role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" >Добавить нового сотрудника</h5>
+                                    </div>
+                                    <form action="#" th:action="${'/department/'+department.departmentId+'/add_employee'}" method = "post" >
+                                    <div class="modal-body">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class = "col-md-6">Фамилия</div>
+                                                    <div class=" col-md-6">
+                                                        <input type = "text" name="lastname" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class = "col-md-6">Имя</div>
+                                                    <div class=" col-md-6">
+                                                        <input type = "text" name="firstname" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class = "col-md-6">Отчество</div>
+                                                    <div class=" col-md-6">
+                                                        <input type = "text" name="secondname" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class = "col-md-6">Должность</div>
+                                                    <div class=" col-md-6">
+                                                        <input type = "text" name="post" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class = "col-md-6">Адрес</div>
+                                                    <div class=" col-md-6">
+                                                        <input type = "text" name="address" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class = "col-md-6">Статус</div>
+                                                    <div class=" col-md-6">
+                                                        <select name="status">
+                                                            <option th:each="stat : ${department.statuses}" th:value="${stat}"
+                                                                    th:text="${stat}" th:selected="${department.defaultSelectedValue}"></option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden"  th:value="${division.divisionId}" name="divisionId"/>
+                                            </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="submit" class="btn btn-primary" value="добавить"/>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <!-- Удаление отдела с подтверждением-->
+                    <td>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" th:data-target="${'#deleteDivision'+division.divisionId}">
+                            удалить
+                        </button>
+                        <div class="modal body" th:id="${'deleteDivision'+division.divisionId}" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" >Подтверждение удаления</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        Вы действительно хотите удалить отдел?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form action="#" th:action="${'/department/'+department.departmentId+'/delete_division'}" method = "post">
+                                            <input type="hidden"  th:value="${division.divisionId}" name="divId"/>
+                                            <input type="submit" class="btn btn-danger" value="удалить"/>
+                                        </form>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:each="employee : ${division.employees}">
+                    <td th:text="${employee.lastname}"> Фамилия</td>
+                    <td th:text="${employee.firstname}"> Имя</td>
+                    <td th:text="${employee.secondname}"> Отчество</td>
+                    <td th:text="${employee.post}"> Должность</td>
+                    <td th:text="${employee.address}"> Адрес</td>
+                    <td th:text="${employee.status}"> Статус </td>
+                    <td>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" th:data-target="${'#changeEmployee'+employee.id}">
+                            обновить данные
+                        </button>
+                        <!-- окно с изменением информации о сотруднике -->
+                        <div class="modal body" th:id="${'changeEmployee'+employee.id}" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" >Изменить данные сотрудника</h5>
+                                    </div>
+                                    <form action="#" th:action="${'/department/'+department.departmentId+'/update_employee'}" method = "post">
+                                        <div class="modal-body">
+                                            <input type="hidden"  th:value="${division.divisionId}" name="divId"/>
+                                            <input type="hidden"  th:value="${employee.id}" name="empId"/>
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class = "col-md-6">Фамилия</div>
+                                                    <div class=" col-md-6">
+                                                        <input type = "text" name="lastname" th:value="${employee.lastname}" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class = "col-md-6">Имя</div>
+                                                    <div class=" col-md-6">
+                                                        <input type = "text" name="firstname" th:value="${employee.firstname}" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class = "col-md-6">Отчество</div>
+                                                    <div class=" col-md-6">
+                                                        <input type = "text" name="secondname" th:value="${employee.secondname}" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class = "col-md-6">Должность</div>
+                                                    <div class=" col-md-6">
+                                                        <input type = "text" name="post" th:value="${employee.post}" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class = "col-md-6">Адрес</div>
+                                                    <div class=" col-md-6">
+                                                        <input type = "text" name="address" th:value="${employee.address}" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class = "col-md-6">Статус</div>
+                                                    <div class=" col-md-6">
+                                                        <select name="status">
+                                                            <option th:each="stat : ${department.statuses}" th:value="${stat}"
+                                                                th:text="${stat}" th:selected="${employee.status}"></option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input type="submit" class="btn btn-primary" value="Изменить">
+                                            <button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" th:data-target="${'#deleteEmployee'+employee.id}">
+                            удалить
+                        </button>
+                        <!-- окно подтверждения удаления сотрудника -->
+                        <div class="modal body" th:id="${'deleteEmployee'+employee.id}" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" >Подтверждение удаления</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        Вы действительно хотите удалить выбранного сотрудника?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form action="#" th:action="${'/department/'+ department.departmentId + '/delete_employee'}" method = "post">
+                                            <input type="hidden"  th:value="${employee.id}" name="empId"/>
+                                            <input type="submit" class="btn btn-danger" value="удалить"/>
+                                        </form>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </th:block>
+        </table>
+        </div>
+    </div>
+</div>
+
+
+<div class = "container" th:if = "${admin}">
+    <div class="row">
+        <div class="col-8">
+            <div class="card">
+                <div class="card-header text-white text-center bg-primary">Добавить ответственного</div>
+                <div class="card-body">
+                        <form class ="form-inline" action="#" th:action="${'/department/'+department.departmentId+'/register'}" method = "post">
+                            <label for="login" >Логин</label>
+                            <input class="form-control ml-1 mr-1" type = "text" name="login" id="login" required/>
+                            <label for="password">Пароль</label>
+                            <input class="form-control ml-1" type = "text" name="pass" id="password" required/>
+                            <input class ="btn btn-primary ml-1" type="submit" value="добавить"/>
+                        </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+</html>
